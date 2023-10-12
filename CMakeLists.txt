@@ -590,11 +590,11 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
 # ..................
 ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
 
-        SET(exec_name "${COMPILE_TARGET}_${COMPILE_MODE}")
+        SET(exec_name "${COMPILE_TARGET}_${COMPILE_MODE}_develop")
 
         # Choose where to create the executable
         SET(PARENT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
-        SET(EXEC_DIR ${PARENT_DIR}/../../../case_studies_mizuroute)
+        SET(EXEC_DIR ${PARENT_DIR}../../../../../../case_studies_mizuroute)
 
         IF(UNIX AND NOT APPLE)
 
