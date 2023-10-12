@@ -48,8 +48,9 @@ class OpenWQ_output{
             return this->numDimensions;
         }
 
-        int setNumDimensions(int new_numDimensions){
+        void setNumDimensions(int new_numDimensions){
             this->numDimensions = new_numDimensions;
+            return;
         }
 
     private:
