@@ -37,7 +37,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.10 FATAL_ERROR)
 # optA3) summa_openwq -> compile with summa using hydrolink
 # optA4) mizuroute_openwq -> compile with mizuRoute using hydrolink
 # optA5) fluxos_openwq -> compile with fluxos using hydrolink
-SET(COMPILE_TARGET mizuroute_openwq)
+SET(COMPILE_TARGET summa_openwq)
 
 # B) Set Compilation mode:
 # optB1) debug -> set the necessary flags for debugging
@@ -405,7 +405,8 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                         ${ENGINE_DIR}/pOverwrite.f90
                         ${ENGINE_DIR}/read_param.f90
                         ${ENGINE_DIR}/paramCheck.f90
-                        ${ENGINE_DIR}/check_icond.f90)
+                        ${ENGINE_DIR}/check_icond.f90
+                        ${OPENWQ_INTERFACE_DIR}/summa_openWQ_allocspace.f90)
 
                 # Define routines for the SUMMA model runs
                 SET(MODRUN
@@ -525,8 +526,8 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                         "/usr/include/"
                         "/code/")
                 TARGET_LINK_LIBRARIES(SUMMA_COMM PUBLIC
-                        #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
+                        # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
                         SUMMA_NOAHMP)
 
                 # Create the executable with openWQ coupled to Summa                 
@@ -542,8 +543,8 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                                 "/code/")
                         TARGET_LINK_LIBRARIES(
                                 ${exec_name} PUBLIC
-                                #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                                "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                                "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
+                                # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
                                 ${LAPACK_LIBRARIES}
                                 ${netCDF_LIBRARIES}
                                 SUMMA_COMM
