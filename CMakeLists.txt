@@ -54,6 +54,16 @@ MESSAGE(STATUS "OpenWQ Compilation Setup:")
 MESSAGE(STATUS "  => Compilation Target: ${COMPILE_TARGET}")
 MESSAGE(STATUS "  => Compilation Mode: ${COMPILE_MODE}")
 MESSAGE(STATUS "##########################################")
+# Check CPU architecture (arm or x86) for netcdf library
+execute_process(COMMAND uname -p
+                OUTPUT_VARIABLE SYSTEM_PROCESSOR
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
+IF(SYSTEM_PROCESSOR MATCHES "aarch64")
+        SET(NETCDF_LIB_PATH "/usr/lib/aarch64-linux-gnu/libnetcdff.a")
+ELSE()
+        SET(NETCDF_LIB_PATH "/usr/lib/x86_64-linux-gnu/libnetcdff.a")
+ENDIF()
+
 
 # ..................
 # IF TARGET = openwq
@@ -233,8 +243,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "crhm_openwq")
 
                 TARGET_LINK_LIBRARIES(
                         ${exec_name} PUBLIC
-                        #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        ${NETCDF_LIB_PATH}
                         ${Boost_LIBRARIES}
                         ${ARMADILLO_LIBRARIES}
                         ${HDF5_C_LIBRARY_hdf5})
@@ -526,8 +535,12 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                         "/usr/include/"
                         "/code/")
                 TARGET_LINK_LIBRARIES(SUMMA_COMM PUBLIC
+<<<<<<< HEAD
                         "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
                         # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+=======
+                        ${NETCDF_LIB_PATH}
+>>>>>>> cdfda7e98ea3c6134b598eae5e3dcace12c6bbbd
                         SUMMA_NOAHMP)
 
                 # Create the executable with openWQ coupled to Summa                 
@@ -543,8 +556,12 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                                 "/code/")
                         TARGET_LINK_LIBRARIES(
                                 ${exec_name} PUBLIC
+<<<<<<< HEAD
                                 "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
                                 # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+=======
+                                ${NETCDF_LIB_PATH}
+>>>>>>> cdfda7e98ea3c6134b598eae5e3dcace12c6bbbd
                                 ${LAPACK_LIBRARIES}
                                 ${netCDF_LIBRARIES}
                                 SUMMA_COMM
@@ -575,7 +592,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
 
         # Choose where to create the executable
         SET(PARENT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
-        SET(EXEC_DIR ${PARENT_DIR}/../../../case_studies/testCase_cameo_v1.2/bin)
+        SET(EXEC_DIR ${PARENT_DIR}/../../../case_studies)
 
         IF(UNIX AND NOT APPLE)
 
@@ -686,8 +703,8 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
                 SET(CMAKE_CXX_STANDARD 17)
 
                 IF("${COMPILE_MODE}" STREQUAL "debug")
-                        SET(CMAKE_Fortran_FLAGS "-g3 -Wall -fmax-errors=0 -fbacktrace -fcheck=all -ffpe-trap=zero -ffree-line-length-none -lstdc++")
-                        SET(CMAKE_CXX_FLAGS "-g3 -O0 -Wall -pedantic")
+                        SET(CMAKE_Fortran_FLAGS "-g3 -Wall -fmax-errors=0 -fbacktrace -fcheck=all -ffpe-trap=zero -ffree-line-length-none -lstdc++ -pg")
+                        SET(CMAKE_CXX_FLAGS "-g3 -O0 -Wall -pedantic -pg")
                 ELSEIF("${COMPILE_MODE}" STREQUAL "fast")
                         SET(CMAKE_Fortran_FLAGS "-O3 -fmax-errors=0 -ffree-line-length-none -lstdc++ -fopenmp")
                         SET(CMAKE_CXX_FLAGS "-O3 ${OpenMP_CXX_FLAGS}")
@@ -733,8 +750,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
                         "/code/")
                 TARGET_LINK_LIBRARIES(
                         ${exec_name} PUBLIC
-                        # "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        ${NETCDF_LIB_PATH}
                         ${LAPACK_LIBRARIES}
                         ${netCDF_LIBRARIES}
                         OPENWQ_OBJ)
@@ -814,8 +830,7 @@ SET(exec_name "${COMPILE_TARGET}_${COMPILE_MODE}")
 
                 TARGET_LINK_LIBRARIES(
                         ${exec_name} PUBLIC
-                        #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        ${NETCDF_LIB_PATH}
                         ${ARMADILLO_LIBRARIES}
                         ${HDF5_C_LIBRARY_hdf5}
                         )
