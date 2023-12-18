@@ -574,7 +574,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
 
         # Choose where to create the executable
         SET(PARENT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
-        SET(EXEC_DIR ${PARENT_DIR}/../../../case_studies/testCase_cameo_v1.2/bin)
+        SET(EXEC_DIR ${PARENT_DIR}/../../../case_studies)
 
         IF(UNIX AND NOT APPLE)
 
@@ -685,8 +685,8 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
                 SET(CMAKE_CXX_STANDARD 17)
 
                 IF("${COMPILE_MODE}" STREQUAL "debug")
-                        SET(CMAKE_Fortran_FLAGS "-g3 -Wall -fmax-errors=0 -fbacktrace -fcheck=all -ffpe-trap=zero -ffree-line-length-none -lstdc++")
-                        SET(CMAKE_CXX_FLAGS "-g3 -O0 -Wall -pedantic")
+                        SET(CMAKE_Fortran_FLAGS "-g3 -Wall -fmax-errors=0 -fbacktrace -fcheck=all -ffpe-trap=zero -ffree-line-length-none -lstdc++ -pg")
+                        SET(CMAKE_CXX_FLAGS "-g3 -O0 -Wall -pedantic -pg")
                 ELSEIF("${COMPILE_MODE}" STREQUAL "fast")
                         SET(CMAKE_Fortran_FLAGS "-O3 -fmax-errors=0 -ffree-line-length-none -lstdc++ -fopenmp")
                         SET(CMAKE_CXX_FLAGS "-O3 ${OpenMP_CXX_FLAGS}")
@@ -732,8 +732,8 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
                         "/code/")
                 TARGET_LINK_LIBRARIES(
                         ${exec_name} PUBLIC
-                        # "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
+                        # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
                         ${LAPACK_LIBRARIES}
                         ${netCDF_LIBRARIES}
                         OPENWQ_OBJ)
