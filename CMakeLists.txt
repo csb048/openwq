@@ -535,12 +535,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                         "/usr/include/"
                         "/code/")
                 TARGET_LINK_LIBRARIES(SUMMA_COMM PUBLIC
-<<<<<<< HEAD
-                        "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
-=======
                         ${NETCDF_LIB_PATH}
->>>>>>> cdfda7e98ea3c6134b598eae5e3dcace12c6bbbd
                         SUMMA_NOAHMP)
 
                 # Create the executable with openWQ coupled to Summa                 
@@ -556,12 +551,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                                 "/code/")
                         TARGET_LINK_LIBRARIES(
                                 ${exec_name} PUBLIC
-<<<<<<< HEAD
-                                "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                                # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
-=======
                                 ${NETCDF_LIB_PATH}
->>>>>>> cdfda7e98ea3c6134b598eae5e3dcace12c6bbbd
                                 ${LAPACK_LIBRARIES}
                                 ${netCDF_LIBRARIES}
                                 SUMMA_COMM
