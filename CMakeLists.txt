@@ -37,7 +37,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.10 FATAL_ERROR)
 # optA3) summa_openwq -> compile with summa using hydrolink
 # optA4) mizuroute_openwq -> compile with mizuRoute using hydrolink
 # optA5) fluxos_openwq -> compile with fluxos using hydrolink
-SET(COMPILE_TARGET mizuroute_openwq)
+SET(COMPILE_TARGET summa_openwq)
 
 # B) Set Compilation mode:
 # optB1) debug -> set the necessary flags for debugging
@@ -54,6 +54,16 @@ MESSAGE(STATUS "OpenWQ Compilation Setup:")
 MESSAGE(STATUS "  => Compilation Target: ${COMPILE_TARGET}")
 MESSAGE(STATUS "  => Compilation Mode: ${COMPILE_MODE}")
 MESSAGE(STATUS "##########################################")
+# Check CPU architecture (arm or x86) for netcdf library
+execute_process(COMMAND uname -p
+                OUTPUT_VARIABLE SYSTEM_PROCESSOR
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
+IF(SYSTEM_PROCESSOR MATCHES "aarch64")
+        SET(NETCDF_LIB_PATH "/usr/lib/aarch64-linux-gnu/libnetcdff.a")
+ELSE()
+        SET(NETCDF_LIB_PATH "/usr/lib/x86_64-linux-gnu/libnetcdff.a")
+ENDIF()
+
 
 # ..................
 # IF TARGET = openwq
@@ -233,8 +243,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "crhm_openwq")
 
                 TARGET_LINK_LIBRARIES(
                         ${exec_name} PUBLIC
-                        #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        ${NETCDF_LIB_PATH}
                         ${Boost_LIBRARIES}
                         ${ARMADILLO_LIBRARIES}
                         ${HDF5_C_LIBRARY_hdf5})
@@ -405,7 +414,8 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                         ${ENGINE_DIR}/pOverwrite.f90
                         ${ENGINE_DIR}/read_param.f90
                         ${ENGINE_DIR}/paramCheck.f90
-                        ${ENGINE_DIR}/check_icond.f90)
+                        ${ENGINE_DIR}/check_icond.f90
+                        ${OPENWQ_INTERFACE_DIR}/summa_openWQ_allocspace.f90)
 
                 # Define routines for the SUMMA model runs
                 SET(MODRUN
@@ -525,8 +535,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                         "/usr/include/"
                         "/code/")
                 TARGET_LINK_LIBRARIES(SUMMA_COMM PUBLIC
-                        #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        ${NETCDF_LIB_PATH}
                         SUMMA_NOAHMP)
 
                 # Create the executable with openWQ coupled to Summa                 
@@ -542,8 +551,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "summa_openwq")
                                 "/code/")
                         TARGET_LINK_LIBRARIES(
                                 ${exec_name} PUBLIC
-                                #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                                "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                                ${NETCDF_LIB_PATH}
                                 ${LAPACK_LIBRARIES}
                                 ${netCDF_LIBRARIES}
                                 SUMMA_COMM
@@ -732,8 +740,7 @@ ELSEIF("${COMPILE_TARGET}" STREQUAL "mizuroute_openwq")
                         "/code/")
                 TARGET_LINK_LIBRARIES(
                         ${exec_name} PUBLIC
-                        "/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        # "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        ${NETCDF_LIB_PATH}
                         ${LAPACK_LIBRARIES}
                         ${netCDF_LIBRARIES}
                         OPENWQ_OBJ)
@@ -813,8 +820,7 @@ SET(exec_name "${COMPILE_TARGET}_${COMPILE_MODE}")
 
                 TARGET_LINK_LIBRARIES(
                         ${exec_name} PUBLIC
-                        #"/usr/lib/x86_64-linux-gnu/libnetcdff.a"
-                        "/usr/lib/aarch64-linux-gnu/libnetcdff.a"
+                        ${NETCDF_LIB_PATH}
                         ${ARMADILLO_LIBRARIES}
                         ${HDF5_C_LIBRARY_hdf5}
                         )
